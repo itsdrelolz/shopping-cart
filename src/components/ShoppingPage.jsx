@@ -3,12 +3,7 @@ import Card from "./Card";
 const ShoppingPage = () => {
   return (
     <>
-      <div className="p-2 m-2 grid grid-cols-3 gap-6 items-center justify-items-center">
-        <Card />
-        <Card />
-        <Card />
-        <Card />
-        <Card />
+      <div className="p-2 m-2 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         <Card />
       </div>
     </>

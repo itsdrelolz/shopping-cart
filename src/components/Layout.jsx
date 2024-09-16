@@ -2,45 +2,38 @@ import Navbar from "./NavBar";
 import Footer from "./Footer";
 import { Outlet } from "react-router-dom";
 import { useState, useEffect } from "react";
+import PropTypes from 'prop-types';
+import getItems from "../itemsApi";
+import { useOutletContext } from "react-router-dom";
 
 const Layout = () => {
-  const [cartItems, setCartItems] = useState(null);
+  const [cartItems, setCartItems] = useState([]);
   const [cartSum, setCartSum] = useState(0);
   const [loading, setLoading] = useState(true);
 
   
 
-    const getItems = async () => {
+    useEffect(() => { 
+      const getData = async () => { 
         try {
-          const promises = [];
-          for (let id = 1; id <= 10; id++) {
-            promises.push(fetch(`https://fakestoreapi.com/products/${id}`).then(res => res.json()));
-          }
-          const results = await Promise.all(promises);
-          const {title, price, image} = results;
-          console.log(`Title: ${title}, Price: ${price}, Image: ${image}`)
-          return title, price, image;
-        } catch (error) {
-          console.error("Error fetching item data data:", error);
-        } finally {
+        const data = await getItems();
+        setCartItems(data);
+        return data;
+        }
+        catch(err) { 
+          console.error(err);
+        }
+        finally { 
           setLoading(false);
         }
-    }
-
-    const formattedPokemon = async () => { 
-        const formatted = await getItems();
-        const formattedResults = formatted.map(pokemon => ({
-          pokeImage: pokemon.sprites.front_default,
-          pokeName: pokemon.name
-        }))
-        setItems(formattedResults);
-        return formattedResults
       }
+      getData();
+
+    }, []);
+
+   
+
     
-      useEffect(() => {
-        formattedPokemon();
-      
-      }, []);
 
 
   if (loading) return <div className="flex flex-auto justify-center font-sans text-black text-2xl w-full items-center ">Loading...</div>;
@@ -55,11 +48,16 @@ const Layout = () => {
     <>
       <Navbar />
 
-      <Outlet />
+      <Outlet context={{ cartItems }}/>
 
       <Footer />
     </>
   );
 };
 
+
+
+
 export default Layout;
+
+
