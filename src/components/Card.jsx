@@ -7,19 +7,19 @@ const Card = () => {
     <>
       {cartItems.map(({ title, price, image, description }, index) => (
         <div
-          className="flex flex-col bg-white shadow-md rounded-lg h-full"
+          className="flex flex-col bg-white shadow-md"
           key={index}
         >
-          <div className="relative w-full h-60 overflow-hidden">
+          <div className="">
             <img
               src={image}
               alt={description}
-              className="w-full h-full object-cover"
+              className=" w-full h-96 object-cover"
             />
           </div>
           <div className="flex flex-col p-4 flex-grow">
-            <h1 className="text-xl font-semibold mb-2">{title}</h1>
-            <h2 className="text-lg text-gray-700 mb-4">{`$${Number.parseFloat(price).toFixed(2)}`}</h2>
+            <h1 className="text-xl text-center font-semibold mb-2">{title}</h1>
+            <h2 className="text-lg text-center text-gray-700 mb-4">{`$${Number.parseFloat(price).toFixed(2)}`}</h2>
           </div>
           <button className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
             Add to cart
