@@ -8,8 +8,4 @@ const App = () => {
 
 export default App;
 
-/// create Nav  : should display link to home page and shopping page,  cart icon on the right to allow user to see cart
 
-/// main content that displays card for each item
-
-// footer only displays copyright information
