@@ -1,5 +1,4 @@
 import Navbar from "./NavBar";
-
 import { Outlet } from "react-router-dom";
 import { useState, useEffect } from "react";
 import getItems from "../itemsApi";
@@ -7,10 +6,11 @@ import getItems from "../itemsApi";
 const Layout = () => {
   const [items, setItems] = useState([]);
   const [cartItems, setCartItems] = useState([]);
-  const [cartSum, setCartSum] = useState(0);
   const [loading, setLoading] = useState(true);
-  
+  const [totalItemCount, setTotalItemCount] = useState(0);
+  const [totalPrice, setTotalPrice] = useState(0);
 
+  // Fetching data
   useEffect(() => {
     const getData = async () => {
       try {
@@ -26,39 +26,52 @@ const Layout = () => {
     getData();
   }, []);
 
+  // Updating total item count and price whenever cartItems change
+  useEffect(() => {
+    const newTotalItemCount = cartItems.reduce((total, item) => total + item.quantity, 0);
+    const newTotalPrice = cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
 
+    setTotalItemCount(newTotalItemCount);
+    setTotalPrice(newTotalPrice);
+  }, [cartItems]);
 
-  const handleAddToCart = (newItem) => { 
-    setCartItems((prevItems) => { 
-      const itemIndex = prevItems.findIndex(item => item.title = newItem.title); 
-      if (itemIndex > -1) { 
-        const updatedItems = [...prevItems]; 
-        updatedItems[itemIndex].quantity += 1;
-        console.log(updatedItems)
-        setCartItems(updatedItems);
+  // Add item to cart
+  const handleAddToCart = (newItem) => {
+    setCartItems((prevItems) => {
+      const existingItem = prevItems.find(item => item.title === newItem.title);
+      if (existingItem) {
+        return prevItems.map(item => 
+          item.title === newItem.title 
+            ? { ...item, quantity: item.quantity + 1 }
+            : item
+        );
       } else {
-        setCartItems([...prevItems, { ...newItem, quantity: 1 }])
+        return [...prevItems, { ...newItem, quantity: 1 }];
       }
-  });
+    });
   };
 
+  // Increase item count
+  const handleIncreaseItemCount = (newItem) => {
+    setCartItems((prevItems) => 
+      prevItems.map(item => 
+        item.title === newItem.title 
+          ? { ...item, quantity: item.quantity + 1 }
+          : item
+      )
+    );
+  };
 
-  const totalItemCount = cartItems.reduce((total, item) => total + item.quantity, 0);
-
-  const totalPrice = cartItems.reduce((total, item) => { 
-    return total + (item.price * item.quantity);
-  }, 0);
-
-
-  
-  
-  
-      
-
-        
-    
-  
-    
+  // Decrease item count or remove item
+  const handleDecreaseItemCount = (newItem) => {
+    setCartItems((prevItems) => 
+      prevItems.map(item => 
+        item.title === newItem.title && item.quantity > 0
+          ? { ...item, quantity: item.quantity - 1 }
+          : item
+      ).filter(item => item.quantity > 0)
+    );
+  };
 
   if (loading)
     return (
@@ -70,9 +83,18 @@ const Layout = () => {
   return (
     <div className="flex flex-col min-h-screen">
       <Navbar />
-  
       <div className="flex-grow">
-        <Outlet context={{ items, handleAddToCart, cartItems, totalPrice, totalItemCount}} />
+        <Outlet
+          context={{
+            items,
+            handleAddToCart,
+            cartItems,
+            totalPrice,
+            totalItemCount,
+            handleIncreaseItemCount,
+            handleDecreaseItemCount,
+          }}
+        />
       </div>
     </div>
   );
