@@ -5,7 +5,7 @@ const NavBar = () => {
   const img = Image;
 
   return (
-    <nav className="flex flex-row items-center  justify-between w-full max-w-screen-2xl mx-auto font-sans text-lg px-4 py-4 bg-gray-700 text-white shadow-lg">
+    <nav className="fixed flex flex-row items-center  justify-between w-full max-w-screen-2xl mx-auto font-sans text-lg px-4 py-4 bg-gray-700 text-white shadow-lg top-0 left-0 right-0 opacity-95">
       <div>
         <Link
           to="/"
