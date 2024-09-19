@@ -9,6 +9,7 @@ const Layout = () => {
   const [cartItems, setCartItems] = useState([]);
   const [cartSum, setCartSum] = useState(0);
   const [loading, setLoading] = useState(true);
+  
 
   useEffect(() => {
     const getData = async () => {
@@ -25,16 +26,7 @@ const Layout = () => {
     getData();
   }, []);
 
-  // const handleAddToCart = (item) => {
-  //   setCartItems((prevItem) => {
-  //     const updatedCart = [...prevItem, item];
-  //     const cartTotal = updatedCart
-  //       .reduce((acc, curr) => acc + Number.parseFloat(curr.price), 0)
-  //       .toFixed(2);
-  //     setCartSum(cartTotal);
-  //     return updatedCart;
-  //   });
-  // };
+
 
   const handleAddToCart = (newItem) => { 
     setCartItems((prevItems) => { 
@@ -43,11 +35,11 @@ const Layout = () => {
         const updatedItems = [...prevItems]; 
         updatedItems[itemIndex].quantity += 1;
         console.log(updatedItems)
-        return updatedItems;
+        setCartItems(updatedItems);
       } else {
-        return [...prevItems,{ ...newItem, quantity: 1 }]
+        setCartItems([...prevItems, { ...newItem, quantity: 1 }])
       }
-    });
+  });
   };
 
 
@@ -56,6 +48,10 @@ const Layout = () => {
   const totalPrice = cartItems.reduce((total, item) => { 
     return total + (item.price * item.quantity);
   }, 0);
+
+
+  
+  
   
       
 
@@ -76,7 +72,7 @@ const Layout = () => {
       <Navbar />
   
       <div className="flex-grow">
-        <Outlet context={{ items, handleAddToCart, cartItems, totalPrice, totalItemCount }} />
+        <Outlet context={{ items, handleAddToCart, cartItems, totalPrice, totalItemCount}} />
       </div>
     </div>
   );
